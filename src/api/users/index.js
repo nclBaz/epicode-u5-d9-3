@@ -36,7 +36,12 @@ usersRouter.get(
   passport.authenticate("google", { session: false }),
   async (req, res, next) => {
     console.log(req.user)
-    res.redirect(`${process.env.FE_URL}?accessToken=${req.user.accessToken}`)
+    res.cookie("accessToken", req.user.accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+    })
+    res.redirect(`${process.env.FE_URL}`)
   }
 )
 // The purpose of this endpoint is to bring users back, receiving a response from Google, then execute the callback function, then send a response to the client
