@@ -19,7 +19,7 @@ usersRouter.post("/", async (req, res, next) => {
   }
 })
 
-usersRouter.get("/", JWTAuthMiddleware, adminOnlyMiddleware, async (req, res, next) => {
+usersRouter.get("/", JWTAuthMiddleware, async (req, res, next) => {
   try {
     const users = await UsersModel.find({})
     res.send(users)
@@ -36,7 +36,7 @@ usersRouter.get(
   passport.authenticate("google", { session: false }),
   async (req, res, next) => {
     console.log(req.user)
-    res.send({ accessToken: req.user.accessToken })
+    res.redirect(`${process.env.FE_URL}?accessToken=${req.user.accessToken}`)
   }
 )
 // The purpose of this endpoint is to bring users back, receiving a response from Google, then execute the callback function, then send a response to the client
