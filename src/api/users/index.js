@@ -1,5 +1,6 @@
 import express from "express"
 import createHttpError from "http-errors"
+import passport from "passport"
 import { adminOnlyMiddleware } from "../../lib/auth/adminOnly.js"
 import { JWTAuthMiddleware } from "../../lib/auth/jwtAuth.js"
 import { createAccessToken } from "../../lib/auth/tools.js"
@@ -26,6 +27,11 @@ usersRouter.get("/", JWTAuthMiddleware, adminOnlyMiddleware, async (req, res, ne
     next(error)
   }
 })
+
+usersRouter.get("/googleLogin", passport.authenticate("google"))
+// The purpose of this endpoint is to redirect users to Google Consent Screen
+
+usersRouter.get("/googleRedirect")
 
 usersRouter.get("/me", JWTAuthMiddleware, async (req, res, next) => {
   try {
@@ -65,6 +71,7 @@ usersRouter.get("/:userId", JWTAuthMiddleware, async (req, res, next) => {
     next(error)
   }
 })
+
 usersRouter.put("/:userId", JWTAuthMiddleware, adminOnlyMiddleware, async (req, res, next) => {
   try {
   } catch (error) {
